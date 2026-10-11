@@ -35,6 +35,174 @@ include '../db/cosult_log.php';
 		<!-- Librerias JavaScript principales -->
 		<script src="https://kit.fontawesome.com/a81368914c.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+		<style>
+			/* Correccion de escala, zoom y adaptabilidad movil */
+			.wrapper {
+				min-height: 100vh !important;
+				display: flex !important;
+				align-items: center !important;
+				justify-content: center !important;
+				padding: 1.5rem !important;
+				box-sizing: border-box !important;
+			}
+			.inner {
+				max-width: 920px !important;
+				width: 100% !important;
+				margin: auto !important;
+				display: flex !important;
+				flex-direction: row !important;
+				align-items: stretch !important;
+				border-radius: 16px !important;
+				overflow: hidden !important;
+				background: #ffffff !important;
+				box-shadow: 0 15px 35px rgba(0,0,0,0.2) !important;
+			}
+			.inner .image-holder {
+				flex: 1 1 50% !important;
+				width: 50% !important;
+				min-width: 0 !important;
+				background: #fffdf5 !important;
+				display: flex !important;
+				align-items: center !important;
+				justify-content: center !important;
+				padding: 2rem !important;
+				border-right: 1px solid rgba(0,0,0,0.06) !important;
+				box-sizing: border-box !important;
+			}
+			.inner .image-holder img.logo {
+				max-width: 100% !important;
+				width: auto !important;
+				max-height: 380px !important;
+				height: auto !important;
+				object-fit: contain !important;
+			}
+			.cont-header {
+				flex: 1 1 50% !important;
+				width: 50% !important;
+				min-width: 0 !important;
+				padding: 2rem 2.25rem !important;
+				display: flex !important;
+				flex-direction: column !important;
+				justify-content: center !important;
+				text-align: center !important;
+				box-sizing: border-box !important;
+			}
+			.login-content {
+				width: 100% !important;
+				max-width: 380px !important;
+				margin: 0 auto !important;
+			}
+			.inner form {
+				width: 100% !important;
+				padding: 0 !important;
+			}
+			.input-div > div {
+				position: relative !important;
+			}
+			.fa-eye {
+				position: absolute !important;
+				right: 10px !important;
+				top: 50% !important;
+				transform: translateY(-50%) !important;
+				font-size: 16px !important;
+				color: #999 !important;
+				cursor: pointer !important;
+				z-index: 10 !important;
+			}
+			.input_field {
+				width: 100% !important;
+				margin-top: 10px !important;
+				position: relative !important;
+			}
+			.captch_box {
+				display: flex !important;
+				align-items: center !important;
+			}
+			.captch_box input {
+				width: 100% !important;
+				text-align: center !important;
+				letter-spacing: 4px !important;
+				font-weight: bold !important;
+			}
+			.refresh_button {
+				position: absolute !important;
+				right: 6px !important;
+				top: 50% !important;
+				transform: translateY(-50%) !important;
+				background: #28a745 !important;
+				border: none !important;
+				color: #fff !important;
+				border-radius: 4px !important;
+				width: 30px !important;
+				height: 30px !important;
+			}
+			.captch_input input {
+				width: 100% !important;
+			}
+			.boton {
+				width: 100% !important;
+				border-radius: 25px !important;
+				background: linear-gradient(135deg, #28a745 0%, #20c997 100%) !important;
+				font-weight: 600 !important;
+			}
+
+			/* Reglas responsivas para tablets y telefonos moviles */
+			@media (max-width: 860px) {
+				.wrapper {
+					padding: 1rem !important;
+				}
+				.inner {
+					flex-direction: column !important;
+					max-width: 440px !important;
+					border-radius: 14px !important;
+				}
+				.inner .image-holder {
+					width: 100% !important;
+					flex: none !important;
+					padding: 1.5rem 1rem 0.5rem !important;
+					border-right: none !important;
+					border-bottom: 1px solid rgba(0,0,0,0.06) !important;
+					background: transparent !important;
+				}
+				.inner .image-holder img.logo {
+					max-height: 140px !important;
+					width: auto !important;
+				}
+				.cont-header {
+					width: 100% !important;
+					flex: none !important;
+					padding: 1rem 1.5rem 1.75rem !important;
+				}
+				.cont-header h1 {
+					font-size: 1.5rem !important;
+					margin-bottom: 0.5rem !important;
+				}
+			}
+
+			@media (max-width: 480px) {
+				.wrapper {
+					padding: 0.5rem !important;
+				}
+				.inner {
+					max-width: 100% !important;
+					border-radius: 12px !important;
+				}
+				.inner .image-holder img.logo {
+					max-height: 110px !important;
+				}
+				.cont-header {
+					padding: 0.75rem 1rem 1.25rem !important;
+				}
+				.cont-header h1 {
+					font-size: 1.3rem !important;
+				}
+				.boton {
+					font-size: 0.95rem !important;
+					padding: 0.65rem !important;
+				}
+			}
+		</style>
 	</head>
 
 	<script>
