@@ -1,21 +1,93 @@
-form{
+/**
+ * Estilos complementarios y adaptabilidad responsiva global
+ * Modulo Administrativo INTI
+ */
+
+form {
     display: flex;
     flex-direction: column;
 }
 
-form input, select{
-    padding: 5px;
-    border-radius: 5px;
-    border: 0.5px solid black;
+form input, select, textarea {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #d1d3e2;
+    font-size: 0.95rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
-form button{
-    padding: 8px;
+form input:focus, select:focus, textarea:focus {
+    border-color: #bac8f3;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+}
+
+form button {
+    padding: 9px 16px;
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
     background-color: #4e73df;
     background-image: linear-gradient(180deg, #4e73df 10%, #224abe 100%);
     background-size: cover;
     color: white;
     cursor: pointer;
+    font-weight: 600;
+    transition: filter 0.2s ease;
+}
+
+form button:hover {
+    filter: brightness(1.08);
+}
+
+/* Reglas globales de adaptabilidad responsiva para tablas y paneles */
+.card {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.card-body {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+table.table {
+    width: 100% !important;
+    white-space: nowrap;
+}
+
+/* Adaptabilidad en pantallas medianas y pequenas */
+@media (max-width: 768px) {
+    .container-fluid {
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+    }
+
+    .card-header {
+        padding: 0.75rem 1rem !important;
+    }
+
+    .card-body {
+        padding: 0.75rem !important;
+    }
+
+    .h3, h1.h3 {
+        font-size: 1.25rem !important;
+    }
+
+    .btn {
+        font-size: 0.85rem !important;
+        padding: 0.35rem 0.65rem !important;
+    }
+
+    /* Ajuste de controles de DataTables en movil */
+    .dataTables_wrapper .dataTables_length,
+    .dataTables_wrapper .dataTables_filter {
+        text-align: left !important;
+        margin-bottom: 0.5rem;
+    }
+
+    .dataTables_wrapper .dataTables_paginate {
+        text-align: center !important;
+        margin-top: 0.5rem;
+    }
 }

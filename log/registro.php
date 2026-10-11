@@ -29,7 +29,7 @@ include '../db/register.php';
     <meta name="viewport" content="width=device-width" />
 
     <!-- Fuentes y estilos del wizard -->
-    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="assets/css/bootstrap.min.css" type="text/css" rel="stylesheet"/>
     <link href="assets/css/gsdk-bootstrap-wizard.css" type="text/css" rel="stylesheet"/>
     <link href="assets/css/home.css" type="text/css" rel="stylesheet"/>

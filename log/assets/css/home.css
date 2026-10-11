@@ -1,28 +1,34 @@
-body{
-    padding: 0;
-    margin: 0;
-    background-color: #f4f4f4;
+body {
+  padding: 0;
+  margin: 0;
+  background-color: #f4f6f9;
 }
 
-/*****Eliminar border por defecto de un botton */
 input[type="button"] {
   border: none;
-  }
-button{
-outline:none;
 }
-button:active { 
-  outline: none;
-} 
-button:focus {
- outline:none;
-}
-/*********/
 
-/*pa cambiar el style del scroll*/
+button {
+  outline: none;
+}
+
+button:active,
+button:focus {
+  outline: none;
+}
+
 ::-webkit-scrollbar {
-    width: 8px;
-    height: 2px;
+  width: 8px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background: #a0aec0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #718096;
 }
 
 .glass {
@@ -31,73 +37,67 @@ button:focus {
   left: 0;
   width: 100%;
   height: 100%;
-  backdrop-filter: blur(4px); /* Efecto de cristal */
-  border-radius: 10px
+  backdrop-filter: blur(4px);
+  border-radius: 10px;
 }
 
-.image-container{
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 10px
+.image-container {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
 }
 
-::-webkit-scrollbar-thumb {
-    border:1px solid #666666;
-    border-radius: 3px;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    background: #666666;
-    /*background: rgba(0,0,0,.1);*/
+/* Formularios ordenados y 100% responsivos */
+.form-group {
+  margin-bottom: 1.25rem;
+  width: 100%;
 }
 
-::-webkit-scrollbar-thumb:hover {
-    background: grey;
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100% !important;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
-.form-group{
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  margin: 0px 50px 15px;
-  margin-left: auto;
-
+.tabla2 {
+  margin: 0;
+  width: 100%;
 }
 
-
-.form-group input{
-  width: 150%;
-
+.grupo3 {
+  width: 100%;
+  margin-bottom: 1rem;
 }
 
-.tabla2{
-  margin: 0px 10px;
-  justify-content: space-between;
+.grupo3 select,
+.grupo3 input {
+  width: 100% !important;
 }
 
-.col-sm-10{
-  justify-content: space-between;
+/* Wizard responsivo */
+.wizard-card {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 2rem;
 }
 
-.form-group select{
-  width: 55%;
-}
+@media (max-width: 768px) {
+  .wizard-card {
+    padding: 10px;
+    margin: 10px auto;
+  }
 
-.grupo3{
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  margin: 0px 50px 15px;
-  margin-left: auto;
-  width: 150%;
-}
+  .wizard-navigation .nav > li > a {
+    padding: 8px 4px;
+    font-size: 11px;
+  }
 
-.grupo3 select{
-  width: 50%;
-}
-
-.grupo3 input{
-  width: 225%;
+  .form-group {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
 }
