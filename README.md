@@ -45,14 +45,303 @@ El aplicativo esta disenado bajo una estructura modular en PHP, con separacion c
 
 ---
 
-## Modelo de Base de Datos
-La base de datos del sistema se denomina inti y cuenta con las siguientes entidades principales:
+## Diagramas de Flujo del Sistema
 
-1. usuarios: Contiene la informacion demografica, ubicacion geografica (estado, municipio, parroquia, sector), datos de produccion (cosechas, cria de animales, alimentos), situacion juridica, organizacion a la que pertenece y credenciales de acceso de los campesinos.
-2. empleados: Almacena los registros del personal institucional del INTI, datos de contacto, rol y contrasenas encriptadas.
-3. estados, municipios, parroquias: Tablas que contienen la division politico-territorial de Venezuela para alimentar los selectores dinamicos del registro.
-4. noticias: Publicaciones, convocatorias y comunicados generados por los administradores.
-5. participaciones: Registro de participacion de usuarios en eventos o convocatorias institucionales.
+### 1. Flujo de Autenticacion y Control de Acceso por Rol
+Este diagrama describe el ciclo de verificacion de credenciales al iniciar sesion, validando en primera instancia la coleccion de productores campesinos y posteriormente la de empleados administrativos institucionales.
+
+```mermaid
+flowchart TD
+    A([Inicio: Usuario ingresa a log/login.php]) --> B[Introduce Cedula o Usuario y Contrasena]
+    B --> C[Envio asincrono por POST a db/cosult_log.php]
+    C --> D[(Consulta en tabla usuarios por cedula)]
+    D --> E{Existe en usuarios y estatus es Campesino?}
+    E -- Si --> F[Verificar hash con password_verify]
+    F --> G{Contrasena valida?}
+    G -- Si --> H[Iniciar sesion PHP con rol Campesino]
+    H --> I([Redireccion a c/index.php - Panel Campesino])
+    G -- No --> J[Retornar mensaje de error de credenciales]
+    E -- No --> K[(Consulta en tabla empleados por cedula)]
+    K --> L{Existe en empleados y empleado es Si?}
+    L -- Si --> M[Verificar hash con password_verify]
+    M --> N{Contrasena valida?}
+    N -- Si --> O[Iniciar sesion PHP con rol Empleado]
+    O --> P([Redireccion a v/index.php - Panel Administrativo])
+    N -- No --> J
+    L -- No --> J
+    J --> Q([Mostrar alerta SweetAlert con mensaje de error])
+```
+
+---
+
+### 2. Flujo del Asistente de Registro de Productores Campesinos (Wizard)
+El registro publico de nuevos productores se gestiona mediante un asistente guiado de 5 etapas para asegurar la completitud de la ficha tecnica y territorial.
+
+```mermaid
+flowchart TD
+    Inicio([Inicio de Registro: log/registro.php]) --> Paso1[Paso 1: Datos Personales e Identidad]
+    Paso1 --> V1{Validar Nombres, Apellidos, Cedula y Telefono}
+    V1 -- Valido --> Paso2[Paso 2: Ubicacion Geografica y Territorial]
+    V1 -- Invalido --> Paso1
+    Paso2 --> CargaGeo[Seleccionar Estado, Municipio, Parroquia y Sector]
+    CargaGeo --> Paso3[Paso 3: Vinculacion Comunitaria y Organizativa]
+    Paso3 --> Org{Pertenece a alguna organizacion?}
+    Org -- Si --> DatosOrg[Registrar Nombre y Fortaleza Organizativa]
+    Org -- No --> Paso4[Paso 4: Diagnostico de Formacion y Capacitacion]
+    DatosOrg --> Paso4
+    Paso4 --> Formacion[Indicar Area de Interes, Horario y Dias Disponibles]
+    Formacion --> Paso5[Paso 5: Ficha Productiva y Tenencia de Tierras]
+    Paso5 --> Agro[Registrar Cosechas, Alimentos, Crias, Situacion Juridica y Fuentes de Ingreso]
+    Agro --> Submit[Definir Contrasena y Enviar Formulario]
+    Submit --> Backend[Procesamiento en db/register.php]
+    Backend --> Hash[Encriptacion Bcrypt de contrasena con password_hash]
+    Hash --> Insert[(Insercion preparada PDO en tabla usuarios)]
+    Insert --> Fin([Confirmacion exitosa y redireccion a login])
+```
+
+---
+
+### 3. Flujo del Modulo de Gestion Administrativa
+Describe las operaciones que realiza el personal del INTI para auditar, consultar y actualizar los registros agrarios con controles de confirmacion sensible.
+
+```mermaid
+flowchart TD
+    Admin([Funcionario autenticado en v/index.php]) --> Menu{Seleccion de Modulo}
+    Menu --> M1[Gestion de Campesinos]
+    Menu --> M2[Comandos Campesinos y Organizaciones]
+    Menu --> M3[Proceso Formativo]
+    Menu --> M4[Reportes Graficos]
+    Menu --> M5[Publicacion de Noticias]
+    Menu --> M6[Personal Administrativo]
+
+    M1 --> DT1[Carga de listado con DataTables]
+    DT1 --> Accion1{Accion sobre registro}
+    Accion1 --> Ver[Busqueda y visualizacion detallada]
+    Accion1 --> Editar[Modificacion de ficha tecnica]
+    Accion1 --> Eliminar[Solicitud de eliminacion]
+    
+    Eliminar --> Prompt[Modal de seguridad: Confirmar numero de cedula]
+    Prompt --> Check{Cedula coincide exactamente?}
+    Check -- Si --> ExecDel[(Eliminacion en base de datos via db/delete_campe.php)]
+    ExecDel --> ToastOk[Notificacion SweetAlert de exito]
+    Check -- No --> CancelDel[Operacion cancelada por proteccion]
+
+    M4 --> AjaxChart[Llamada AJAX a db/data.php y db/data_comando.php]
+    AjaxChart --> RenderChart[Renderizado de graficas de pastel y barras con Chart.js]
+
+    DT1 --> Export{Exportar datos}
+    Export --> PDF[Generar documento PDF con pdfmake]
+    Export --> Excel[Generar hoja de calculo Excel con JSZip]
+    Export --> Print[Enviar a vista de impresion directa]
+```
+
+---
+
+## Diagrama Entidad-Relacion (ERD)
+
+A continuacion se presenta el modelo relacional implementado en la base de datos `inti`:
+
+```mermaid
+erDiagram
+    ESTADOS ||--o{ USUARIOS : "ubica a"
+    MUNICIPIOS ||--o{ USUARIOS : "pertenece a"
+    PARROQUIAS ||--o{ USUARIOS : "contiene a"
+    USUARIOS ||--o{ PARTICIPACIONES : "participa en"
+    NOTICIAS ||--o{ PARTICIPACIONES : "convoca a"
+
+    EMPLEADOS {
+        int id PK
+        varchar nombre
+        varchar apellido
+        varchar cedula
+        varchar correo
+        varchar telefono
+        varchar confirmacion
+        varchar password
+        varchar empleado
+    }
+
+    ESTADOS {
+        int id PK
+        varchar estado UK
+    }
+
+    MUNICIPIOS {
+        int id PK
+        varchar municipios UK
+    }
+
+    PARROQUIAS {
+        int id PK
+        varchar parroquias UK
+    }
+
+    USUARIOS {
+        int id PK
+        varchar nombres
+        varchar apellidos
+        varchar cedula
+        varchar sexo
+        date fecha_nacimiento
+        varchar estado FK
+        varchar municipio FK
+        varchar parroquia FK
+        varchar sector
+        varchar status
+        varchar password
+        varchar telefono
+        varchar correo
+        varchar pert_organizacion
+        varchar name_org
+        varchar fortaleza_org
+        varchar area_formativa
+        varchar horario_disponible
+        varchar dias_formacion
+        varchar cosecha
+        varchar comida
+        varchar crias
+        varchar situacion_juridica
+        varchar fuentes_ingresos
+        varchar organizacion_campesina
+        varchar oganizacion_fines_lucro
+    }
+
+    NOTICIAS {
+        int id PK
+        varchar title
+        longtext descripcion
+        text button_participe
+        timestamp fecha
+        varchar inicio
+    }
+
+    PARTICIPACIONES {
+        int id PK
+        int id_campesino FK
+        int id_noticia FK
+        varchar participo
+    }
+```
+
+---
+
+## Diccionario de Datos
+
+### Tabla: `usuarios`
+Almacena la informacion integral de los productores agricolas y campesinos registrados en el censo del sistema.
+
+| Nombre de Campo | Tipo de Dato | Nulo / Clave | Valor Predeterminado | Descripcion y Proposito |
+| :--- | :--- | :--- | :--- | :--- |
+| `id` | INT(11) | NOT NULL, PK | Auto-incremental | Identificador unico correlativo del usuario campesino. |
+| `nombres` | VARCHAR(255) | NOT NULL | Ninguno | Nombres del campesino. |
+| `apellidos` | VARCHAR(255) | NOT NULL | Ninguno | Apellidos del campesino. |
+| `cedula` | VARCHAR(11) | NOT NULL | 'Sin Cedula' | Documento de identidad nacional para identificacion y acceso. |
+| `sexo` | VARCHAR(6) | NOT NULL | Ninguno | Sexo o genero del campesino ('Hombre', 'Mujer'). |
+| `fecha_nacimiento` | DATE | NOT NULL | Ninguno | Fecha de nacimiento para calculo de rangos etarios y censos. |
+| `estado` | VARCHAR(255) | NOT NULL, FK | Ninguno | Nombre del estado federativo donde reside la unidad productiva. |
+| `municipio` | VARCHAR(255) | NOT NULL, FK | Ninguno | Municipio correspondiente a la ubicacion del productor. |
+| `parroquia` | VARCHAR(255) | NOT NULL, FK | Ninguno | Parroquia asignada segun division territorial. |
+| `sector` | VARCHAR(255) | NOT NULL | Ninguno | Comunidad, caserio o sector especifico de residencia. |
+| `status` | VARCHAR(100) | NOT NULL | 'Campesino' | Rol asignado en la plataforma ('Campesino'). |
+| `password` | VARCHAR(100) | NOT NULL | Ninguno | Hash criptografico de la contrasena protegido con Bcrypt. |
+| `telefono` | VARCHAR(255) | NOT NULL | Ninguno | Numero telefonico de contacto del productor. |
+| `correo` | VARCHAR(255) | NOT NULL | Ninguno | Direccion de correo electronico para contacto institucional. |
+| `pert_organizacion` | VARCHAR(255) | NOT NULL | Ninguno | Indicador afirmativo o negativo de membresia a un colectivo agrario. |
+| `name_org` | VARCHAR(255) | NOT NULL | Ninguno | Nombre formal de la organizacion o asociacion campesina. |
+| `fortaleza_org` | VARCHAR(255) | NOT NULL | Ninguno | Capacidad tecnica, productiva o logistica de su agrupacion. |
+| `area_formativa` | VARCHAR(255) | NOT NULL | Ninguno | Rama tecnica o agroproductiva solicitada para formacion. |
+| `horario_disponible`| VARCHAR(255) | NOT NULL | Ninguno | Jornada o bloque horario libre para talleres de capacitacion. |
+| `dias_formacion` | VARCHAR(255) | NOT NULL | Ninguno | Dias habiles o fines de semana disponibles para formacion. |
+| `cosecha` | VARCHAR(255) | NOT NULL | Ninguno | Tipologia de cultivos principales (hortalizas, cereales, tuberculos). |
+| `comida` | VARCHAR(255) | NOT NULL | Ninguno | Destino o tipo de rubros orientados a la seguridad alimentaria. |
+| `crias` | VARCHAR(255) | NOT NULL | Ninguno | Tipologia de produccion pecuaria (bovino, porcino, ovino, avicola). |
+| `situacion_juridica`| VARCHAR(255) | NOT NULL | Ninguno | Condicion legal del predio ('Propio', 'Arrendado', 'Pisatario', etc.). |
+| `fuentes_ingresos` | VARCHAR(255) | NOT NULL | Ninguno | Modalidad de sustento ('Venta Directa', 'Cooperativa', 'Intercambio'). |
+| `organizacion_campesina` | VARCHAR(255) | NOT NULL | Ninguno | Clasificacion de comando agrario o colectivo comunitario. |
+| `oganizacion_fines_lucro`| VARCHAR(255) | NOT NULL | Ninguno | Naturaleza economica de la asociacion a la que se vincula. |
+
+---
+
+### Tabla: `empleados`
+Registra al personal oficial, analistas y administradores del INTI facultados para gestionar el panel de control.
+
+| Nombre de Campo | Tipo de Dato | Nulo / Clave | Valor Predeterminado | Descripcion y Proposito |
+| :--- | :--- | :--- | :--- | :--- |
+| `id` | INT(11) | NOT NULL, PK | Auto-incremental | Identificador unico correlativo del funcionario. |
+| `nombre` | VARCHAR(255) | NOT NULL | Ninguno | Nombres del empleado del instituto. |
+| `apellido` | VARCHAR(255) | NOT NULL | Ninguno | Apellidos del empleado del instituto. |
+| `cedula` | VARCHAR(255) | NOT NULL | Ninguno | Documento de identidad utilizado como usuario de acceso administrativo. |
+| `correo` | VARCHAR(255) | NOT NULL | Ninguno | Correo corporativo o personal del empleado. |
+| `telefono` | VARCHAR(255) | NOT NULL | Ninguno | Numero telefonico de contacto institucional. |
+| `confirmacion` | VARCHAR(2) | NOT NULL | Ninguno | Indicador de verificacion de registro ('Si', 'No'). |
+| `password` | VARCHAR(255) | NOT NULL | Ninguno | Contrasena encriptada mediante algoritmo seguro Bcrypt. |
+| `empleado` | VARCHAR(2) | NOT NULL | 'Si' | Estatus operativo que valida el privilegio de ingreso a vistas administrativas. |
+
+---
+
+### Tabla: `noticias`
+Controla las publicaciones oficiales, avisos y convocatorias emitidas por la direccion del instituto.
+
+| Nombre de Campo | Tipo de Dato | Nulo / Clave | Valor Predeterminado | Descripcion y Proposito |
+| :--- | :--- | :--- | :--- | :--- |
+| `id` | INT(11) | NOT NULL, PK | Auto-incremental | Identificador correlativo de la noticia o comunicado. |
+| `title` | VARCHAR(255) | NOT NULL | Ninguno | Titulo publico del comunicado o llamado institucional. |
+| `descripcion` | LONGTEXT | NOT NULL | Ninguno | Cuerpo textual extenso con el contenido informativo o lineamientos. |
+| `button_participe` | TEXT | NOT NULL | 'No' | Habilita ('Si') o desactiva ('No') la opcion de confirmacion ciudadana. |
+| `fecha` | TIMESTAMP | NOT NULL | CURRENT_TIMESTAMP | Fecha y hora exacta de emision registrada por el servidor. |
+| `inicio` | VARCHAR(255) | NOT NULL | Ninguno | Fecha programada para el inicio del evento, jornada o asamblea. |
+
+---
+
+### Tabla: `participaciones`
+Almacena el registro de intencion o asistencia de los productores a eventos convocados a traves del portal de noticias.
+
+| Nombre de Campo | Tipo de Dato | Nulo / Clave | Valor Predeterminado | Descripcion y Proposito |
+| :--- | :--- | :--- | :--- | :--- |
+| `id` | INT(11) | NOT NULL, PK | Auto-incremental | Identificador unico del registro de participacion. |
+| `id_campesino` | INT(11) | NOT NULL, FK | Ninguno | Referencia foranea al productor en la tabla `usuarios`. |
+| `id_noticia` | INT(11) | NOT NULL, FK | Ninguno | Referencia foranea a la publicacion en la tabla `noticias`. |
+| `participo` | VARCHAR(255) | NOT NULL | Ninguno | Estado de la participacion ('si', 'no', o confirmacion recibida). |
+
+---
+
+### Tablas Auxiliares de Division Geopolitica Nacional
+
+#### Tabla: `estados`
+| Nombre de Campo | Tipo de Dato | Nulo / Clave | Descripcion |
+| :--- | :--- | :--- | :--- |
+| `id` | INT(11) | NOT NULL, PK | Clave primaria autonumerica. |
+| `estado` | VARCHAR(255) | NOT NULL, UNIQUE | Nombre oficial del estado federal venezolano. |
+
+#### Tabla: `municipios`
+| Nombre de Campo | Tipo de Dato | Nulo / Clave | Descripcion |
+| :--- | :--- | :--- | :--- |
+| `id` | INT(11) | NOT NULL, PK | Clave primaria autonumerica. |
+| `municipios` | VARCHAR(255) | NOT NULL, UNIQUE | Nombre del municipio geografico. |
+
+#### Tabla: `parroquias`
+| Nombre de Campo | Tipo de Dato | Nulo / Clave | Descripcion |
+| :--- | :--- | :--- | :--- |
+| `id` | INT(11) | NOT NULL, PK | Clave primaria autonumerica. |
+| `parroquias` | VARCHAR(255) | NOT NULL, UNIQUE | Nombre oficial de la parroquia local. |
+
+---
+
+## Matriz de Privilegios por Perfil de Acceso
+
+| Modulo / Accion del Sistema | Campesino (Usuario General) | Funcionario INTI (Administrador) |
+| :--- | :---: | :---: |
+| Autenticacion en plataforma | Permitido | Permitido |
+| Consulta de Ficha Personal | Permitido | Permitido |
+| Visualizacion de Noticias y Eventos | Permitido | Permitido |
+| Confirmacion de Asistencia a Convocatorias | Permitido | No aplica |
+| Visualizacion de Censos Globales con DataTables | Restringido | Permitido |
+| Exportacion a PDF, Excel e Impresion | Restringido | Permitido |
+| Modificacion de Datos de Campesinos | Restringido | Permitido |
+| Eliminacion de Registros con Confirmacion | Restringido | Permitido |
+| Registro de Nuevos Funcionarios | Restringido | Permitido |
+| Emision y Publicacion de Noticias | Restringido | Permitido |
+| Acceso a Metricas y Graficas Estadisticas | Restringido | Permitido |
 
 ---
 
@@ -94,30 +383,8 @@ El sistema lo redireccionara automaticamente a la pantalla de inicio de sesion (
 
 ---
 
-## Roles y Flujo de Trabajo
-
-### Flujo de Acceso (Login)
-Al ingresar usuario (o cedula) y contrasena:
-* El sistema evalua primero si corresponde a un registro en la tabla de usuarios con estatus Campesino. De ser afirmativo, inicia sesion y lo envia a la vista c/index.php.
-* Si el usuario pertenece a la tabla de empleados y cuenta con estatus activo de empleado, inicia sesion y lo redirecciona al panel administrativo v/index.php.
-
-### Modulo Administrativo (Funcionarios)
-* Inicio / Dashboard: Metricas generales y accesos directos.
-* Tabla de Campesinos: Gestion integral de productores (visualizacion, edicion y baja con confirmacion de cedula).
-* Organizacion y Comandos Campesinos: Registro y control de las asociaciones agrarias y su condicion juridica.
-* Proceso Formativo: Censo de necesidades de formacion, horarios disponibles y areas tecnicas de interes.
-* Reportes Estadisticos: Graficas dinamicas que representan la distribucion legal de las tierras y fuentes de ingreso.
-* Noticias: Modulo para redactar comunicados con opcion de participacion ciudadana.
-* Personal: Registro y control de los funcionarios con acceso al sistema.
-
-### Modulo Campesino
-* Ficha personal: Consulta de datos personales, ubicacion registrada y ficha productiva.
-* Novedades: Visualizacion de comunicados y convocatorias emitidas por la institucion.
-
----
-
 ## Consideraciones de Seguridad y Buenas Practicas
 * Sentencias preparadas: Todas las consultas que reciben valores del usuario utilizan marcadores de posicion con PDO, previniendo inyecciones de codigo SQL.
 * Encriptacion de contrasenas: Las contrasenas nunca se almacenan en texto plano; se procesan mediante la funcion nativa password_hash usando el algoritmo Bcrypt.
 * Confirmacion de borrado: En las acciones de eliminacion de registros se exige confirmar la cedula de identidad de la persona para evitar borrados accidentales.
-* Sanitizacion de salidas: Los valores mostrados en tablas y resultados dinámicos son procesados con htmlspecialchars para mitigar vulnerabilidades de Cross-Site Scripting (XSS).
+* Sanitizacion de salidas: Los valores mostrados en tablas y resultados dinamicos son procesados con htmlspecialchars para mitigar vulnerabilidades de Cross-Site Scripting (XSS).
