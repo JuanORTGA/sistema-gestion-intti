@@ -10,11 +10,20 @@
  * @package INTI\Database
  */
 
-// Parametros de configuracion del servidor local
-$host = "localhost";
-$username = "root";
-$password = "";
-$dbname = "inti";
+// Parametros de configuracion del servidor (deteccion automatica de entorno)
+if (isset($_SERVER['HTTP_HOST']) && (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false || strpos($_SERVER['HTTP_HOST'], '127.0.0.1') !== false)) {
+    // Entorno local (XAMPP / WampServer)
+    $host = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "inti";
+} else {
+    // Entorno de produccion / hosting (InfinityFree)
+    $host = "sql206.infinityfree.com";
+    $username = "if0_43148765";
+    $password = "ceZEWjlW0uxij";
+    $dbname = "if0_43148765_inti";
+}
 
 try {
     // Creacion de la instancia PDO especificando el motor mysql y la base de datos
