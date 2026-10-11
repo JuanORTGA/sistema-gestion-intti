@@ -1,0 +1,103 @@
+body{
+    padding: 0;
+    margin: 0;
+    background-color: #f4f4f4;
+}
+
+/*****Eliminar border por defecto de un botton */
+input[type="button"] {
+  border: none;
+  }
+button{
+outline:none;
+}
+button:active { 
+  outline: none;
+} 
+button:focus {
+ outline:none;
+}
+/*********/
+
+/*pa cambiar el style del scroll*/
+::-webkit-scrollbar {
+    width: 8px;
+    height: 2px;
+}
+
+.glass {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(4px); /* Efecto de cristal */
+  border-radius: 10px
+}
+
+.image-container{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px
+}
+
+::-webkit-scrollbar-thumb {
+    border:1px solid #666666;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    background: #666666;
+    /*background: rgba(0,0,0,.1);*/
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: grey;
+}
+
+.form-group{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 0px 50px 15px;
+  margin-left: auto;
+
+}
+
+
+.form-group input{
+  width: 150%;
+
+}
+
+.tabla2{
+  margin: 0px 10px;
+  justify-content: space-between;
+}
+
+.col-sm-10{
+  justify-content: space-between;
+}
+
+.form-group select{
+  width: 55%;
+}
+
+.grupo3{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 0px 50px 15px;
+  margin-left: auto;
+  width: 150%;
+}
+
+.grupo3 select{
+  width: 50%;
+}
+
+.grupo3 input{
+  width: 225%;
+}

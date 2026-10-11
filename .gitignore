@@ -1,0 +1,20 @@
+# Archivos del sistema operativo
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Archivos comprimidos y copias de seguridad
+*.rar
+*.zip
+*.tar.gz
+*.7z
+*.bak
+*- copia*
+*(1)*
+
+# Configuraciones de editor y entorno
+.vscode/
+*.code-workspace
+
+# Archivos de registro y depuracion
+*.log

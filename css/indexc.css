@@ -1,0 +1,125 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: -webkit-fill-available;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: sans-serif;
+    display: flex;
+    flex-direction: column;
+    height: -webkit-fill-available;
+}
+
+header .logo{
+    background-image: url("/assets/logo_ministerio.png");
+    background-size: 50%;
+    background-repeat: no-repeat;
+    padding: 50px;
+    width: -webkit-fill-available;
+    background-color: white;
+}
+
+header .title{
+    padding: 20px;
+    background: url("https://th.bing.com/th/id/OIP.--9yD9oBdX2m5ccExCmgcwHaE7?rs=1&pid=ImgDetMain");
+    background-size: cover;
+    background-position: top;
+    font-size: 40px;
+    width: -webkit-fill-available;
+    text-transform: uppercase;
+}
+
+header .soporte{
+    padding: 5px;
+    background: rgb(238, 174, 202);
+    background: linear-gradient(179deg, rgb(255 255 255) 0%, rgb(204 227 199) 100%);
+    text-align: right;
+    padding-right: 40px;
+    padding-left: 40px;
+    font-size: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header .soporte a{
+    padding: 5px;
+    color: red;
+    text-decoration: none;
+    background: rgb(238, 174, 202);
+    border-radius: 5px;
+}
+
+main{
+    display: flex;
+    align-items: top;
+    grid-gap: 20px;
+    background: url("https://static.vecteezy.com/system/resources/previews/022/967/165/original/the-landscape-of-natural-grass-field-and-trees-with-ai-generated-free-photo.jpg");
+    background-position: center;
+    background-size: cover;
+}
+
+main aside{
+    display: flex;
+    flex-direction: column;
+    width: 350px;
+    background: #85ff8573;
+    padding: 15px;
+    text-align: center;
+}
+
+main aside a{
+    padding: 10px;
+    width: -webkit-fill-available;
+    background-color: rgb(0, 169, 0);
+    text-decoration: none;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    color: white;
+}
+
+main aside a:hover{
+    background-color: rgb(1, 101, 1);
+}
+
+main .container{
+    display: flex;
+    flex-direction: column;
+    width: -webkit-fill-available;
+    background: #85ff8573;
+    padding: 15px;
+    line-height: 2;
+}
+
+main form{
+    display: flex;
+    grid-gap: 100px;
+}
+
+main form .labels,
+main form .info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+main form .labels label{
+    padding: 5px 0px;
+}
+
+main form .info{
+    width: 300px;
+}
+
+main form .info input,
+main form .info select,
+main form .info date {
+    padding: 5px 11px;
+    width: -webkit-fill-available;
+}

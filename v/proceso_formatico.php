@@ -1,0 +1,452 @@
+<?php
+/**
+ * Vista de Administracion: Gestion de Procesos Formativos
+ *
+ * Administra el censo de necesidades de formacion, capacitacion agraria,
+ * horarios de disponibilidad y dias propuestos para talleres de los campesinos,
+ * integrando la tabla interactiva y los modales de actualizacion.
+ *
+ * @package INTI\Admin
+ */
+
+session_start();
+
+if (!isset($_SESSION["id"])) {
+    header("Location: ../index.php");
+    exit;
+}
+
+$id        = $_SESSION["id"];
+$nombres   = $_SESSION["nombre"];
+$apellidos = $_SESSION["apellido"];
+$cedula    = $_SESSION["cedula"];
+$correo    = $_SESSION["correo"];
+$telefono  = $_SESSION["telefono"];
+
+include '../db/table_formativo.php';
+
+?>
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Proceso Formatico</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="../inicio/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="../inicio/css/sb-admin-2.css" rel="stylesheet">
+    <link href="../inicio/css/forms.css" rel="stylesheet">
+    <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">INTI <sup></sup></div>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item">
+                <a class="nav-link" href="index.php">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Inicio</span></a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Interface
+            </div>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item active">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+                    aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Organización Campesina</span>
+                </a>
+
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="organizacion_campesina.php">Graficas</a>
+                        <a class="collapse-item" href="campesino_tabla.php">Informacion General</a>
+                    </div>
+                </div>
+            </li>
+
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Secciones Admin
+            </div>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
+                    aria-expanded="true" aria-controls="collapseUtilities">
+                    <i class="fas fa-fw fa-folder"></i>
+                    <span>Proceso Formatico</span>
+                </a>
+
+                <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
+                    data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="graficas_formativo.php">Graficas</a>
+                        <a class="collapse-item" href="proceso_formatico.php">Diagnostico Formativo</a>
+                    </div>
+                </div>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+                    aria-expanded="true" aria-controls="collapsePages">
+                    <i class="fas fa-fw fa-folder"></i>
+                    <span>Comando Campesino </span>
+                </a>
+                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="graficas_comando_camp.php">Grafica</a>
+                        <a class="collapse-item" href="comando_camp_tabla.php">Produccion Campesina</a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Nav Item - Tables -->
+            <li class="nav-item">
+                <a class="nav-link" href="personal_administrativo.php">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Personal Administrativo</span></a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="personal_administrativo.php">
+                    <i class="fas fa-fw fa-search"></i>
+                    <span>Busqueda de Usuario</span></a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="crear_noticias.php">
+                    <i class="fas fa-fw fa-search"></i>
+                    <span>Crear Noticia</span></a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+
+        </ul>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+
+                    <!-- Topbar Search -->
+                    <form
+                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                        <div class="input-group">
+                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+                                aria-label="Search" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="button">
+                                    <i class="fas fa-search fa-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+
+                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+                        <li class="nav-item dropdown no-arrow d-sm-none">
+                            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-search fa-fw"></i>
+                            </a>
+                            <!-- Dropdown - Messages -->
+                            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
+                                aria-labelledby="searchDropdown">
+                                <form class="form-inline mr-auto w-100 navbar-search">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control bg-light border-0 small"
+                                            placeholder="Search for..." aria-label="Search"
+                                            aria-describedby="basic-addon2">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary" type="button">
+                                                <i class="fas fa-search fa-sm"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </li>
+
+                        <div class="topbar-divider d-none d-sm-block"></div>
+
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $nombres; ?> <?php echo $apellidos; ?></span></span>
+                                <p></p>
+                                <span>Admin</span>
+                                <img class="img-profile rounded-circle"
+                                    src="../inicio/img/undraw_profile.svg">
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Perfil
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Opciones
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Salir
+                                </a>
+                            </div>
+                        </li>
+
+                    </ul>
+
+                </nav>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Diagnostico Formativo</h1>
+                    </div>
+
+                    <!--reservado
+
+                        <!-- Content Row 
+                        <div class="row">
+
+                            <!-- Content Column 
+                            <div class="col-lg-6 mb-4">
+
+                                <!-- Project Card Example 
+                                <div class="card shadow mb-4">
+                                    <div class="card-header py-3">
+                                        <h6 class="m-0 font-weight-bold text-primary">Explora entre tantos usuarios</h6>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <form method="post">
+                                            <label for="cedula">Buscador Dínamico:</label>
+                                            <input type="text" id="datos" class="form-control" onkeyup="buscarUsuarios(this.value)" placeholder="Comienza buscando algo...">
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    reservado-->
+
+                    <!--reservado
+                    
+                        <!-- Content Row Table Admins 
+                        <div class="row">
+
+                            <!-- Content Column 
+                            <div class="col-lg mb-4">
+
+                                <!-- Project Card Example 
+                                <div class="card shadow mb-4">
+                                    <div class="card-header py-3">
+                                        <h6 class="m-0 font-weight-bold text-primary">Resultados Dínamicos</h6>
+                                    </div>
+
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Nombre</th>
+                                                <th scope="col">Apellido</th>
+                                                <th scope="col">Cedula</th>
+                                                <th scope="col">Correo</th>
+                                                <th scope="col">Telefono</th>
+                                                <th scope="col">Dato Buscado</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="resultados">
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    
+                    reservado-->
+
+                    <!-- Content Row Table Admins -->
+                    <div class="row">
+
+                        <!-- Content Column -->
+                        <div class="col-lg mb-4">
+
+                            <!-- Project Card Example -->
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">Campesinos Registrados</h6>
+                                </div>
+
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Nombre</th>
+                                            <th scope="col">Apellido</th>
+                                            <th scope="col">Cedula</th>
+                                            <th scope="col">¿Pertenece a una Organización?</th>
+                                            <th scope="col">Nombre de la Organizacion</th>
+                                            <th scope="col">Fortaleza de la Organización</th>
+                                            <th scope="col">Area Formativa</th>
+                                            <th scope="col">Horario Disponible</th>
+                                            <th scope="col">Dias para la Formación</th>
+                                            <th scope="col">Editar</th>
+                                            <th scope="col">Borrar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php echo $list_campesinos; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Instituto Nacional de Tierras "INTI"</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">¿Listo para Cerrar la Sesion?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">¿Estas Seguro de Salir de Tu Cuenta?.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                    <a class="btn btn-primary" href="logout.php">Salir</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="../inicio/vendor/jquery/jquery.min.js"></script>
+    <script src="../inicio/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="../inicio/js/sb-admin-2.js"></script>
+    <script src="../inicio/js/script_num.js"></script>
+
+    <script>
+        function buscarUsuarios(query) {
+            $.ajax({
+                url: '../db/busqueda_din.php',
+                type: 'GET',
+                data: {
+                    datos: query
+                },
+                success: function(response) {
+                    $('#resultados').html(response);
+                }
+            });
+        }
+    </script>
+
+</body>
+
+</html>
