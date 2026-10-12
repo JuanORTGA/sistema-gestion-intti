@@ -164,7 +164,7 @@ if (isset($_GET['delete_status'])) {
         var form = document.getElementById('editForm');
         var formData = new FormData(form);
 
-        fetch('../db/update_persona.php', {
+        fetch('../db/update_personal.php', {
                 method: 'POST',
                 body: formData
             })

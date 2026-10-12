@@ -251,7 +251,7 @@ if (isset($_GET['delete_status'])) {
             .then(response => response.text())
             .then(data => {
                 // Redirigir a la página original con un parámetro de éxito
-                window.location.href = 'campesino_tabla.php?delete_status=' + encodeURIComponent(data);
+                window.location.href = 'comando_camp_tabla.php?delete_status=' + encodeURIComponent(data);
             })
             .catch(error => console.error('Error:', error));
     }
