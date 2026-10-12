@@ -105,23 +105,12 @@ $oganizacion_fines_lucro = $_SESSION["oganizacion_fines_lucro"];
                 Interface
             </div>
 
-            <!-- Nav Item - Pages Collapse Menu -->
+            <!-- Nav Item - Noticias -->
             <li class="nav-item">
-                <a class="nav-link collapsed" href="noticias.php" data-toggle="collapse" data-target="#collapseTwo"
-                    aria-expanded="true" aria-controls="collapseTwo">
-                    <i class="fas fa-fw fa-cog"></i>
-                    <span>Noticias</span>
+                <a class="nav-link" href="noticias.php">
+                    <i class="fas fa-fw fa-newspaper"></i>
+                    <span>Noticias y Convocatorias</span>
                 </a>
-
-                <!-- para posible uso
-
-                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Componentes:</h6>
-                        <a class="collapse-item" href="">Buttons</a>
-                        <a class="collapse-item" href="">Cards</a>
-                    </div>
-                </div>
             </li>
 
 
@@ -208,13 +197,13 @@ $oganizacion_fines_lucro = $_SESSION["oganizacion_fines_lucro"];
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="index.php">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Perfil
+                                    Mi Informacion
                                 </a>
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Opciones
+                                <a class="dropdown-item" href="noticias.php">
+                                    <i class="fas fa-newspaper fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Noticias y Convocatorias
                                 </a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
@@ -234,28 +223,247 @@ $oganizacion_fines_lucro = $_SESSION["oganizacion_fines_lucro"];
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+                        <div>
+                            <h1 class="h3 mb-1 text-gray-800">Ficha del Productor / Campesino</h1>
+                            <p class="text-muted small mb-0">Bienvenido al portal institucional del Instituto Nacional de Tierras</p>
+                        </div>
+                        <a href="noticias.php" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm mt-2 mt-sm-0">
+                            <i class="fas fa-newspaper fa-sm text-white-50 mr-1"></i> Ver Noticias y Convocatorias
+                        </a>
                     </div>
 
-                    <!-- Content Row -->
+                    <!-- Resumen en Tarjetas Superiores -->
+                    <div class="row">
+                        <!-- Tarjeta Productor -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                Productor Registrado</div>
+                                            <div class="h6 mb-0 font-weight-bold text-gray-800"><?php echo htmlspecialchars($nombres . ' ' . $apellidos); ?></div>
+                                            <span class="small text-muted">C.I: V-<?php echo htmlspecialchars($cedula); ?></span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-user-check fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta Ubicacion -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-success shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                Territorio / Estado</div>
+                                            <div class="h6 mb-0 font-weight-bold text-gray-800"><?php echo htmlspecialchars($estado ?: 'No especificado'); ?></div>
+                                            <span class="small text-muted"><?php echo htmlspecialchars($municipio ?: ''); ?></span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-map-marker-alt fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta Rubro / Cosecha -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-info shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                                Rubro Principal / Cosecha</div>
+                                            <div class="h6 mb-0 font-weight-bold text-gray-800"><?php echo htmlspecialchars($cosecha ?: 'No registrado'); ?></div>
+                                            <span class="small text-muted">Cría: <?php echo htmlspecialchars($crias ?: 'N/A'); ?></span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-seedling fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta Tenencia de Tierra -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-warning shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                Situacion Juridica</div>
+                                            <div class="h6 mb-0 font-weight-bold text-gray-800"><?php echo htmlspecialchars($situacion_juridica ?: 'En tramite'); ?></div>
+                                            <span class="small text-muted">Estatus INTI</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-balance-scale fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ficha Detallada en 2 Columnas -->
                     <div class="row">
 
-                        <!-- Content Column -->
+                        <!-- Columna Izquierda: Datos Personales y Ubicacion -->
                         <div class="col-lg-6 mb-4">
 
-                            <!-- Project Card Example -->
+                            <!-- Tarjeta Datos Personales -->
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3 d-flex align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">
+                                        <i class="fas fa-id-card mr-2"></i>Datos Personales y Contacto
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <table class="table table-sm table-borderless mb-0">
+                                        <tbody>
+                                            <tr>
+                                                <th style="width: 40%;" class="text-muted">Nombres y Apellidos:</th>
+                                                <td class="font-weight-bold text-dark"><?php echo htmlspecialchars($nombres . ' ' . $apellidos); ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-muted">Cedula de Identidad:</th>
+                                                <td>V-<?php echo htmlspecialchars($cedula); ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-muted">Sexo:</th>
+                                                <td><?php echo htmlspecialchars($sexo ?: 'No registrado'); ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-muted">Fecha de Nacimiento:</th>
+                                                <td><?php echo htmlspecialchars($fecha_nacimiento ?: 'No registrada'); ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-muted">Telefono de Contacto:</th>
+                                                <td><?php echo htmlspecialchars($telefono ?: 'No registrado'); ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-muted">Correo Electronico:</th>
+                                                <td><?php echo htmlspecialchars($correo ?: 'No registrado'); ?></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Tarjeta Ubicacion Geografica -->
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Projects</h6>
+                                    <h6 class="m-0 font-weight-bold text-success">
+                                        <i class="fas fa-map-marked-alt mr-2"></i>Ubicacion Territorial del Predio
+                                    </h6>
                                 </div>
-
                                 <div class="card-body">
-
-
+                                    <table class="table table-sm table-borderless mb-0">
+                                        <tbody>
+                                            <tr>
+                                                <th style="width: 40%;" class="text-muted">Estado:</th>
+                                                <td><span class="badge badge-success px-2 py-1"><?php echo htmlspecialchars($estado ?: 'No registrado'); ?></span></td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-muted">Municipio:</th>
+                                                <td><?php echo htmlspecialchars($municipio ?: 'No registrado'); ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-muted">Parroquia:</th>
+                                                <td><?php echo htmlspecialchars($parroquia ?: 'No registrada'); ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-muted">Sector / Asentamiento:</th>
+                                                <td><?php echo htmlspecialchars($sector ?: 'No registrado'); ?></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
 
                         </div>
+
+                        <!-- Columna Derecha: Datos Productivos y Organizacionales -->
+                        <div class="col-lg-6 mb-4">
+
+                            <!-- Tarjeta Produccion Agropecuaria -->
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-info">
+                                        <i class="fas fa-tractor mr-2"></i>Datos de Produccion Agropecuaria
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <table class="table table-sm table-borderless mb-0">
+                                        <tbody>
+                                            <tr>
+                                                <th style="width: 45%;" class="text-muted">Rubro Agricola / Cosecha:</th>
+                                                <td class="font-weight-bold text-dark"><?php echo htmlspecialchars($cosecha ?: 'No registrado'); ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-muted">Destino de la Cosecha:</th>
+                                                <td><?php echo htmlspecialchars($comida ?: 'No especificado'); ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-muted">Cria de Animales:</th>
+                                                <td><?php echo htmlspecialchars($crias ?: 'No registrado'); ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-muted">Situacion Juridica del Predio:</th>
+                                                <td><span class="badge badge-warning px-2 py-1"><?php echo htmlspecialchars($situacion_juridica ?: 'En revision'); ?></span></td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-muted">Fuentes de Ingresos:</th>
+                                                <td><?php echo htmlspecialchars($fuentes_ingresos ?: 'No registrado'); ?></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Tarjeta Organizacion y Formacion -->
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">
+                                        <i class="fas fa-users mr-2"></i>Organizacion y Formacion Agraria
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <table class="table table-sm table-borderless mb-0">
+                                        <tbody>
+                                            <tr>
+                                                <th style="width: 45%;" class="text-muted">Organizacion Campesina:</th>
+                                                <td><?php echo htmlspecialchars($organizacion_campesina ?: ($pert_organizacion ?: 'No especificado')); ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-muted">Nombre de la Organizacion:</th>
+                                                <td><?php echo htmlspecialchars($name_org ?: 'No asociado'); ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-muted">Area Formativa Solicitada:</th>
+                                                <td><span class="badge badge-primary px-2 py-1"><?php echo htmlspecialchars($area_formativa ?: 'No registrada'); ?></span></td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-muted">Dias de Formacion:</th>
+                                                <td><?php echo htmlspecialchars($dias_formacion ?: 'Por definir'); ?></td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-muted">Horario Disponible:</th>
+                                                <td><?php echo htmlspecialchars($horario_disponible ?: 'Por definir'); ?></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+
                     </div>
                 </div>
                 <!-- /.container-fluid -->

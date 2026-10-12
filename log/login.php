@@ -305,10 +305,9 @@ include '../db/cosult_log.php';
 										<div class="i"> 
 											<i class="fas fa-lock"></i>
 										</div>
-										<div class="div">
 											<h5>Contraseña</h5>
-											<input type="password" class="input" class="contraseña" name="password" id="password"  maxlength="20" minlength="4" name="pass">
-											<i class="fa fa-eye" id="togglePassword" aria-hidden="true"></i>
+											<input type="password" class="input contraseña" name="password" id="password" maxlength="20" minlength="4">
+											<i class="fa fa-eye" id="togglePassword" onclick="togglePassVisibility()" style="cursor: pointer;" aria-hidden="true" title="Mostrar u ocultar contraseña"></i>
 										</div>
 									</div>
 

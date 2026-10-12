@@ -17,11 +17,12 @@ body {
 }
 
 header .logo{
-    background-image: url("/assets/logo_ministerio.png");
-    background-size: 50%;
+    background-image: url("../assets/logo_ministerio.png");
+    background-size: contain;
     background-repeat: no-repeat;
-    padding: 50px;
-    width: -webkit-fill-available;
+    background-position: center left;
+    padding: 30px;
+    height: 70px;
     background-color: white;
 }
 
